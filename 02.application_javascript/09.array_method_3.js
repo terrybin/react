@@ -38,7 +38,7 @@ arr3.sort((a, b) => {
 // 4. toSorted
 //  - 정렬된 새로운 배열을 반환하는 메서드
 let arr5 = ["c", "a", "b"];
-//const sorted = arr5.toSorted();
+const sorted = arr5.toSorted();
 
 // 5. join
 //  - 배열의 모든 요소를 하나의 문자열로 합쳐서 반환하는 메서드
