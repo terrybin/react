@@ -1,27 +1,15 @@
 import './App.css'
-import Header from "./component/Header.jsx"
-import Main from "./component/Main.jsx"
-import Footer from "./component/Footer.jsx"
-import Button from "./component/Button.jsx"
+import Register from './component/Register';
 
 // 함수 하나하나가 컴포넌트이다.
 // 컴포넌트는 첫 글자가 대문자여야한다. 
 // (대문자가 아니면 컴포넌트로 인정되지 않는다.)
 function App() {
-
-  return (
-    <>
-      {/* 
-        App 컴포넌트는 부모 컴포넌트이고 Header 컴포넌트는 App 안에 존재하는 
-        다른 컴포넌트이므로 자식 컴포넌트로 본다.
-       */}
-      <Button text={"Mail"} color={"red"} />
-      <Button text={"Cafe"}/>
-      <Button text={"Blog"}>
-        <div>자식요소</div>
-      </Button>
-    </>
-  );
+return (
+  <>
+    <Register />
+  </>
+);
 }
 
 export default App
