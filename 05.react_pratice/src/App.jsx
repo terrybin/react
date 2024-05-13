@@ -1,5 +1,6 @@
 import './App.css'
 import Register from './component/Register';
+import HookExam from './component/HookExam';
 
 // 함수 하나하나가 컴포넌트이다.
 // 컴포넌트는 첫 글자가 대문자여야한다. 
@@ -7,7 +8,7 @@ import Register from './component/Register';
 function App() {
 return (
   <>
-    <Register />
+    <HookExam/>
   </>
 );
 }

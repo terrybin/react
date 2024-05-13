@@ -1,62 +1,69 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 /*
-    간단한 회원가입 폼
-    1. 이름
-    2. 생년월일
-    3. 국적
-    4. 자기소개
+    useRef와 useState의 차이
+    - useRef는 어떤 경우에도 리렌더링을 유발하지 않는다.
+    - useState는 값이 변경되면 리렌더링 한다.
 */
 
 const Register = () => {
-    const [name, setName] = useState("이름");
-    const [birth, setBirth] = useState("");
-    const [country, setCountry] = useState("");
-    const [bio, setBio] = useState("");
+    const [input, setInput] = useState({
+        name: "",
+        birth: "",
+        country: "",
+        bio: ""
+    });
+    const countRef = useRef(0);
+    const inputRef = useRef();
 
-    const onChangeName = (e) => {
-        setName(e.target.value);
+    const onChange = (e) => {
+        countRef.current++
+        console.log(countRef.current);
+        setInput({
+            ...input,
+            [e.target.name]: e.target.value
+        })
     }
-    const onChangeBirth = (e) => {
-        setBirth(e.target.value);
-    }
-    const onChangeCountry = (e) => {
-        setCountry(e.target.value);
-    }
-    const onChangeBio = (e) => {
-        setBio(e.target.value);
+
+    const onSubmit = () => {
+        if (input.name === "") {
+            inputRef.current.focus();
+        }
     }
 
     return (
         <div>
             <div>
                 <input
-                    value={name} 
-                    onChange={onChangeName} 
+                    ref={inputRef}
+                    name="name"
+                    value={input.name}
+                    onChange={onChange} 
                     placeholder={"이름"}/>
             </div>
 
             <div>
                 <input 
-                    value={birth}
+                    name="birth"
+                    value={input.birth}
                     type="date"
-                    onChange={onChangeBirth}/>
+                    onChange={onChange}/>
             </div>
 
             <div>
-                <select value={country} onChange={onChangeCountry}>
+                <select name="country" value={input.country} onChange={onChange}>
                     <option>선택</option>
                     <option value="kr">한국</option>
                     <option value="usa">미국</option>
                     <option value="uk">영국</option>
                 </select>
-                {country}
             </div>
 
             <div>
-                <textarea value={bio} onChange={onChangeBio} />
-                {bio}
+                <textarea name="bio" value={input.bio} onChange={onChange} />
             </div>
+
+            <button onClick={onSubmit}>제출</button>
         </div>
     );
 }
