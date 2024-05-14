@@ -14,3 +14,7 @@
 
 # Context
  - 데이터 보관소 역할을 하는 객체
+
+# Context
+ - StateContext (변경될 수 있는 값)
+ - DispatchContext (변경되지 않는 값)
