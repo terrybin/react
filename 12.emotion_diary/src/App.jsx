@@ -1,5 +1,5 @@
 import './App.css'
-import { useReducer, useRef } from 'react';
+import { useReducer, useRef, createContext } from 'react';
 import New from './pages/New';
 import Diary from './pages/Diary';
 import Home from './pages/Home';
@@ -10,30 +10,47 @@ import { Route, Routes } from 'react-router-dom';
 const mockData = [
   {
     id: 1,
-    createdDate: new Date().getTime(),
+    createdDate: new Date("2024-05-16").getTime(),
     emotionId: 1,
     content: "1번 일기 내용"
   },
   {
     id: 2,
-    createdDate: new Date().getTime(),
+    createdDate: new Date("2024-05-15").getTime(),
     emotionId: 2,
     content: "2번 일기 내용"
+  },
+  {
+    id: 3,
+    createdDate: new Date("2024-04-14").getTime(),
+    emotionId: 3,
+    content: "3번 일기 내용"
   }
 ]
 
 function reducer(state, action) {
   switch (action.type) {
     case "CREATE": 
-      return [action.data, ...state]
+      return [action.data, ...state];
+    case "UPDATE":
+      return state.map(item => 
+        String(item.id) === String(action.data.id) ? action.data : item
+      );
+    case "DELETE":
+      return state.filter(item => 
+        String(item.id) !== String(action.id)
+      );
     default: 
       return state;
   }
 }
 
+export const DiaryStateContext = createContext();
+export  const DiaryDispatchContext = createContext();
+
 function App() {
   const [data, dispatch] = useReducer(reducer, mockData);
-  const idRef = useRef(3);
+  const idRef = useRef(4);
 
   // 새로운 일기 추가
   const onCreate = (createdDate, emotionId, content) => {
@@ -49,11 +66,12 @@ function App() {
   };
 
   // 일기 수정
-  const onUpdate = (id, emotionId, content) => {
+  const onUpdate = (id, createdDate, emotionId, content) => {
     dispatch({
       type: "UPDATE",
       data: {
         id,
+        createdDate,
         emotionId,
         content
       }
@@ -64,26 +82,25 @@ function App() {
   const onDelete = id => {
     dispatch({
       type: "DELETE",
-      data: id
+      id
     })
   }
 
   return (
     <>
-      <button 
-        onClick={() => {
-          onCreate(new Date().getTime(), 1, "Hello");
-        }}
-      >
-        일기추가하기
-      </button>
-      <Routes>
-        <Route path="/" element={ <Home /> } />
-        <Route path="/new" element={ <New /> } />
-        <Route path="/diary/:id" element={ <Diary /> } />
-        <Route path="/edit/:id" element={ <Edit /> } />
-        <Route path="*" element={ <NotFound /> } />
-      </Routes>
+      <DiaryStateContext.Provider value={ data }>
+        <DiaryDispatchContext.Provider value={{
+          onCreate, onUpdate, onDelete
+        }}>
+          <Routes>
+            <Route path="/" element={ <Home /> } />
+            <Route path="/new" element={ <New /> } />
+            <Route path="/diary/:id" element={ <Diary /> } />
+            <Route path="/edit/:id" element={ <Edit /> } />
+            <Route path="*" element={ <NotFound /> } />
+          </Routes>
+        </DiaryDispatchContext.Provider>
+      </DiaryStateContext.Provider>
     </>
   );
 }
