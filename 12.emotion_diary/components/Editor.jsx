@@ -1,49 +1,12 @@
 import "./Editor.css"
 import EmotionItem from "./EmotionItem";
 import Button from "./Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { emotionList } from "../src/util/constants";
+import { getStringDate } from "../src/util/get-string-date";
 
-const emotionList = [
-    {
-        emotionId: 1,
-        emotionName: "Very Good"
-    },
-    {
-        emotionId: 2,
-        emotionName: "Good"
-    },
-    {
-        emotionId: 3,
-        emotionName: "Normal"
-    },
-    {
-        emotionId: 4,
-        emotionName: "Bad"
-    },
-    {
-        emotionId: 5,
-        emotionName: "Very Bad"
-    }
-];
-
-const getStringDate = targetDate => {
-    // Date -> YYYY-MM-DD
-    let year = targetDate.getFullYear();
-    let month = targetDate.getMonth() + 1;
-    let date = targetDate.getDate();
-
-    if (month < 10) {
-        month = `0${month}`
-    }
-    if (date < 10) {
-        date = `0${date}`
-    }
-
-    return `${year}-${month}-${date}`
-}
-
-const Editor = ({ onSubmit }) => {
+const Editor = ({ initData, onSubmit }) => {
     const [input, setInput] = useState({
         createdDate: new Date(),
         emotionId: 3,
@@ -51,6 +14,15 @@ const Editor = ({ onSubmit }) => {
     });
     
     const nav = useNavigate();
+
+    useEffect(() => {
+        if (initData) {
+            setInput({
+                ...initData,
+                createdDate: new Date(Number(initData.createdDate))
+            });
+        }
+    }, [initData]);
 
     const onChangeInput = (e) => {
         let name = e.target.name;
@@ -70,8 +42,6 @@ const Editor = ({ onSubmit }) => {
         onSubmit(input);
     };
 
-    
-
     return (
         <div className="Editor">
             <section className="date_section">
@@ -89,12 +59,12 @@ const Editor = ({ onSubmit }) => {
                     {emotionList.map(item => (
                             <EmotionItem
                                 onClick={() => {
-                                  onChangeInput({
-                                    target: {
-                                        name: "emotionId",
-                                        value: item.emotionId
-                                    }
-                                  })  
+                                    onChangeInput({
+                                        target: {
+                                            name: "emotionId",
+                                            value: item.emotionId
+                                        }
+                                    })  
                                 }} 
                                 key={item.emotionId} 
                                 {...item} 
